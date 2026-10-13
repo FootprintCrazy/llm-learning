@@ -56,37 +56,40 @@
   #legend .dot { width: 9px; height: 9px; border-radius: 3px; flex: none; }
   #hint { position: fixed; right: 12px; bottom: 12px; z-index: 15; font-size: 11px; color: #a8a29e; }
 
-  /* ===== 详情面板 ===== */
-  #panel { position: fixed; top: 52px; right: 0; bottom: 0; width: 360px; z-index: 18;
-    background: #161b22; border-left: 1px solid #30363d; padding: 18px 18px 40px;
-    overflow-y: auto; transform: translateX(100%); transition: transform .18s ease; }
-  #panel.open { transform: translateX(0); }
-  #panel .close { position: absolute; top: 10px; right: 12px; cursor: pointer;
-    color: #8b949e; font-size: 18px; background: none; border: none; }
-  #panel .close:hover { color: #fff; }
-  #panel h2 { font-size: 18px; margin: 2px 0 2px; }
-  #panel .full { font-size: 11.5px; color: #8b949e; line-height: 1.5; margin-bottom: 10px; }
-  #panel .badges { display: flex; gap: 8px; margin-bottom: 14px; }
-  .badge { font-size: 12px; font-weight: 600; padding: 4px 12px;
-    border-radius: 6px; border: 1px solid; }
-  #panel h2 { font-size: 19px; line-height: 1.45; color: #e6edf3; margin-bottom: 10px; }
+  /* ===== 详情抽屉 ===== */
+  #panel { position: fixed; left: 0; right: 0; bottom: 0; height: min(320px, 42vh); z-index: 18;
+    background: #fff; border-top: 1px solid #e7e2da; box-shadow: 0 -8px 30px rgba(28,25,23,.10);
+    transform: translateY(101%); transition: transform .18s ease; }
+  #panel.open { transform: translateY(0); }
+  #panel .close { position: absolute; top: 10px; right: 14px; z-index: 2; cursor: pointer;
+    color: #a8a29e; font-size: 16px; background: none; border: none; }
+  #panel .close:hover { color: #1c1917; }
+  #panelBody { display: flex; width: 100%; min-height: 0; }
+  #panelBody .p-main { flex: 1; min-width: 0; padding: 16px 24px 24px; overflow-y: auto; }
+  #panelBody .p-side { width: 300px; flex: none; border-left: 1px solid #ece9e4;
+    background: #fbfaf8; padding: 16px 18px 24px; overflow-y: auto; }
+  #panelBody .p-main > :first-child, #panelBody .p-side > :first-child { margin-top: 0; }
+  #panel h2 { font-size: 17px; line-height: 1.45; color: #1c1917; margin-bottom: 8px; }
   #panel .meta-row { display: flex; flex-wrap: wrap; gap: 18px;
-    font-size: 12.5px; color: #8b949e; margin-bottom: 4px; }
-  #panel h4 { font-size: 13.5px; font-weight: 700; color: #c9d1d9;
-    margin: 22px 0 10px; padding-bottom: 8px; border-bottom: 1px solid #21262d; }
-  #panel p.abs { font-size: 13px; line-height: 1.85; }
-  #panel .formula { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px;
-    color: #e6db74; background: #0d1117; border: 1px solid #30363d; border-radius: 6px;
-    padding: 12px 14px; line-height: 1.6; word-break: break-all; }
-  #panel ul { padding-left: 20px; font-size: 13px; line-height: 2; }
+    font-size: 12.5px; color: #a8a29e; margin-bottom: 4px; }
+  #panel .badges { display: flex; gap: 8px; margin-bottom: 12px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 10px;
+    border-radius: 99px; border: 1px solid; }
+  #panel h4 { font-size: 12px; font-weight: 700; letter-spacing: .06em; color: #78716c;
+    margin: 16px 0 8px; }
+  #panel p.abs { font-size: 13px; line-height: 1.85; color: #44403c; }
+  #panel .formula { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px;
+    color: #1c1917; background: #fff; border: 1px solid #e7e2da; border-radius: 6px;
+    padding: 10px 12px; line-height: 1.6; word-break: break-all; }
+  #panel ul { padding-left: 20px; font-size: 13px; line-height: 1.9; color: #44403c; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { font-size: 11px; padding: 3px 9px; border-radius: 5px; cursor: pointer;
-    background: #21262d; border: 1px solid #30363d; color: #c9d1d9; }
-  .chip:hover { border-color: #58a6ff; color: #58a6ff; }
-  #panel .arxiv { display: inline-block; margin-top: 18px; font-size: 12.5px;
-    color: #58a6ff; text-decoration: none; border: 1px solid #1f6feb;
-    padding: 7px 14px; border-radius: 6px; }
-  #panel .arxiv:hover { background: #1f6feb22; }
+  .chip { font-size: 11px; padding: 3px 10px; border-radius: 99px; cursor: pointer;
+    background: #fff; border: 1px solid #e7e2da; color: #57534e; }
+  .chip:hover { border-color: #dc2626; color: #dc2626; }
+  #panel .arxiv { display: inline-block; margin-top: 16px; font-size: 12px;
+    color: #dc2626; text-decoration: none; border: 1px solid #fecaca;
+    padding: 6px 14px; border-radius: 99px; }
+  #panel .arxiv:hover { background: #fef2f2; }
 </style>
 </head>
 <body>
@@ -303,8 +306,9 @@ window.addEventListener("resize", fitView);
 function panToPaper(p) {
   const rect = stage.getBoundingClientRect();
   if (view.k < 0.7) view.k = 0.9;
-  view.x = rect.width / 2 - p.x * view.k - 180;
-  view.y = rect.height / 2 - (p.y + NODE_H / 2) * view.k;
+  const drawerH = panel.classList.contains("open") ? panel.getBoundingClientRect().height : 0;
+  view.x = rect.width / 2 - p.x * view.k;
+  view.y = (rect.height - drawerH) / 2 - (p.y + NODE_H / 2) * view.k;
   applyView();
 }
 
@@ -316,35 +320,45 @@ function esc(s) { const d = document.createElement("div"); d.textContent = s; re
 function selectPaper(id, pan = true) {
   if (selectedId === id && panel.classList.contains("open")) { closePanel(); return; }
   selectedId = id;
+  papers.forEach(pp => nodeEls[pp.id].classList.toggle("selected", pp.id === id));
   const p = byId[id], cat = DATA.categories[p.category], lv = LEVELS[p.level];
   const chip = (pid, label) =>
     `<span class="chip" data-id="${pid}">${esc(label || byId[pid].title)}</span>`;
   panelBody.innerHTML = `
-    <div class="badges">
-      <span class="badge" style="color:${cat.color};border-color:${cat.color};background:${cat.color}1f">${cat.name}</span>
-      <span class="badge" style="color:${lv.color};border-color:${lv.color};background:${lv.color}1f">${lv.label}</span>
+    <div class="p-main">
+      <div class="badges">
+        <span class="badge" style="color:${cat.color};border-color:${cat.color};background:${cat.color}14">${cat.name}</span>
+        <span class="badge" style="color:${lv.color};border-color:${lv.color};background:${lv.color}14">${lv.label}</span>
+      </div>
+      <h2>${esc(p.fullTitle)}</h2>
+      <div class="meta-row">
+        <span>👥 ${esc(p.authors)}</span>
+        <span>📅 ${p.year}</span>
+        <span>🏛 ${esc(p.venue)}</span>
+      </div>
+      <h4>摘要</h4><p class="abs">${esc(p.abstract)}</p>
+      <h4>主要贡献</h4><ul>${p.contributions.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+      ${p.prerequisites?.length ? `<h4>阅读前置要求</h4><ul>${
+        p.prerequisites.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
     </div>
-    <h2>${esc(p.fullTitle)}</h2>
-    <div class="meta-row">
-      <span>👥 ${esc(p.authors)}</span>
-      <span>📅 ${p.year}</span>
-      <span>🏛 ${esc(p.venue)}</span>
-    </div>
-    <h4>摘要</h4><p class="abs">${esc(p.abstract)}</p>
-    ${p.keyFormula ? `<h4>核心公式 / 关键思想</h4><div class="formula">${esc(p.keyFormula)}</div>` : ""}
-    <h4>主要贡献</h4><ul>${p.contributions.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
-    ${p.prerequisites?.length ? `<h4>阅读前置要求</h4><ul>${
-      p.prerequisites.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
-    ${p.deps.length ? `<h4>依赖论文</h4><div class="chips">${p.deps.map(d => chip(d)).join("")}</div>` : ""}
-    ${p.dependents.length ? `<h4>后续延伸</h4><div class="chips">${p.dependents.map(d => chip(d)).join("")}</div>` : ""}
-    <a class="arxiv" href="${p.arxiv}" target="_blank" rel="noopener">📄 arXiv / 原文</a>`;
+    <div class="p-side">
+      ${p.keyFormula ? `<h4>核心公式 / 关键思想</h4><div class="formula">${esc(p.keyFormula)}</div>` : ""}
+      ${p.deps.length ? `<h4>依赖论文</h4><div class="chips">${p.deps.map(d => chip(d)).join("")}</div>` : ""}
+      ${p.dependents.length ? `<h4>后续延伸</h4><div class="chips">${p.dependents.map(d => chip(d)).join("")}</div>` : ""}
+      <a class="arxiv" href="${p.arxiv}" target="_blank" rel="noopener">📄 arXiv / 原文</a>
+    </div>`;
   panelBody.querySelectorAll(".chip[data-id]").forEach(c =>
     c.addEventListener("click", () => selectPaper(c.dataset.id)));
   panel.classList.add("open");
   if (pan) panToPaper(p);
 }
-function closePanel() { panel.classList.remove("open"); selectedId = null; }
+function closePanel() {
+  panel.classList.remove("open");
+  selectedId = null;
+  papers.forEach(pp => nodeEls[pp.id].classList.remove("selected"));
+}
 $("#closeBtn").addEventListener("click", closePanel);
+window.addEventListener("keydown", e => { if (e.key === "Escape") closePanel(); });
 
 /* ================= 搜索 ================= */
 $("#search").addEventListener("input", e => {

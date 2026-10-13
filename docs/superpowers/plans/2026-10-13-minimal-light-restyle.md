@@ -439,3 +439,15 @@ git push
 - **Spec 覆盖**：令牌/顶栏/画布/标尺（T1）；类别色板/节点/边/选中环样式（T2）；抽屉/两栏/Esc/selected 逻辑/panToPaper/级别色（T2+T3）；测试更新（T3）；验证与交付（T4）。设计文档「交互保留清单」由 Global Constraints 兜底。
 - **占位符**：无 TBD；所有代码步骤含完整代码。
 - **一致性**：`.p-main`/`.p-side`/`.selected`/`.strip` 命名在 CSS、JS、测试中一致；`closePanel`/`selectPaper`/`panToPaper` 签名未变。
+
+---
+
+## 修订（2026-10-13，用户验收后）
+
+布局从 Task 3 的「底部抽屉」改为「左侧栏导航 + 右侧悬浮详情卡」：
+
+- `#topbar` 移除，新增 `#sidebar`（220px 常驻侧栏，含标题/副标题/`#search`/`#fitBtn`/`#legend`）；`#stage` 改为 `inset: 0 0 0 220px`。
+- `#panel` 改为右侧浮卡（`top/right/bottom:16px`，宽 360px，圆角 14px，translateX 滑入）；`#panelBody` 恢复单栏滚动，`.p-main`/`.p-side` 两栏结构移除。
+- `panToPaper` 改为水平让出浮卡宽度：`(rect.width - cardW)/2 - p.x*view.k`。
+- 测试用例 7 改为：侧栏结构断言 + 浮卡几何断言（top=16 / right=1584 / w=360）+ Esc + `.selected`。
+- 已执行完毕：`npm test` 17 通过 0 失败，截图目检通过。

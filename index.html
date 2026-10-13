@@ -9,22 +9,21 @@
   html, body { height: 100%; overflow: hidden; background: #fbfaf8; color: #1c1917;
     font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif; }
 
-  /* ===== 顶栏 ===== */
-  #topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; z-index: 20;
-    display: flex; align-items: center; gap: 14px; padding: 0 16px;
-    background: rgba(255,255,255,.92); border-bottom: 1px solid #ece9e4; backdrop-filter: blur(6px); }
-  #topbar h1 { font-size: 14px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
-  #topbar .sub { font-size: 11px; color: #a8a29e; white-space: nowrap; }
-  #topbar .spacer { flex: 1; }
-  #search { width: 220px; padding: 6px 14px; font-size: 12px; color: #1c1917;
+  /* ===== 左侧栏 ===== */
+  #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; z-index: 20;
+    display: flex; flex-direction: column; gap: 10px; padding: 16px 14px;
+    background: #fff; border-right: 1px solid #ece9e4; }
+  #sidebar h1 { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+  #sidebar .sub { font-size: 10.5px; color: #a8a29e; line-height: 1.5; margin-bottom: 2px; }
+  #search { width: 100%; padding: 6px 12px; font-size: 12px; color: #1c1917;
     background: #f5f3ef; border: 1px solid #ece9e4; border-radius: 99px; outline: none; }
   #search:focus { border-color: #dc2626; background: #fff; }
-  #fitBtn { padding: 6px 14px; font-size: 12px; color: #57534e; cursor: pointer;
+  #fitBtn { width: 100%; padding: 6px 0; font-size: 12px; color: #57534e; cursor: pointer;
     background: #fff; border: 1px solid #e7e2da; border-radius: 99px; }
   #fitBtn:hover { border-color: #dc2626; color: #dc2626; }
 
   /* ===== 画布 ===== */
-  #stage { position: fixed; inset: 44px 0 0 0; cursor: grab;
+  #stage { position: fixed; inset: 0 0 0 220px; cursor: grab;
     background: radial-gradient(circle, #e7e2da 1px, transparent 1px); background-size: 22px 22px; }
   #stage.dragging { cursor: grabbing; }
   svg { width: 100%; height: 100%; display: block; }
@@ -44,10 +43,8 @@
   .node .lv { font-size: 8px; text-anchor: end; }
 
   /* ===== 图例 ===== */
-  #legend { position: fixed; left: 12px; bottom: 12px; z-index: 15; width: 168px;
-    max-height: 46vh; overflow: auto; padding: 10px 12px; font-size: 11px;
-    background: rgba(255,255,255,.94); border: 1px solid #e7e2da; border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(28,25,23,.08); backdrop-filter: blur(4px); }
+  #legend { flex: 1; min-height: 0; overflow-y: auto; margin: 4px -4px 0;
+    padding: 10px 4px 0; border-top: 1px solid #ece9e4; font-size: 11px; }
   #legend h3 { font-size: 11px; color: #a8a29e; letter-spacing: .08em; margin-bottom: 6px; }
   #legend .item { display: flex; align-items: center; gap: 7px; padding: 2.5px 6px;
     border-radius: 5px; cursor: pointer; color: #57534e; }
@@ -56,19 +53,17 @@
   #legend .dot { width: 9px; height: 9px; border-radius: 3px; flex: none; }
   #hint { position: fixed; right: 12px; bottom: 12px; z-index: 15; font-size: 11px; color: #a8a29e; }
 
-  /* ===== 详情抽屉 ===== */
-  #panel { position: fixed; left: 0; right: 0; bottom: 0; height: min(320px, 42vh); z-index: 18;
-    background: #fff; border-top: 1px solid #e7e2da; box-shadow: 0 -8px 30px rgba(28,25,23,.10);
-    transform: translateY(101%); transition: transform .18s ease; }
-  #panel.open { transform: translateY(0); }
+  /* ===== 详情浮卡 ===== */
+  #panel { position: fixed; top: 16px; right: 16px; bottom: 16px; width: 360px; z-index: 18;
+    background: #fff; border: 1px solid #e7e2da; border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(28,25,23,.14);
+    transform: translateX(calc(100% + 24px)); transition: transform .18s ease; }
+  #panel.open { transform: translateX(0); }
   #panel .close { position: absolute; top: 10px; right: 14px; z-index: 2; cursor: pointer;
     color: #a8a29e; font-size: 16px; background: none; border: none; }
   #panel .close:hover { color: #1c1917; }
-  #panelBody { display: flex; width: 100%; min-height: 0; }
-  #panelBody .p-main { flex: 1; min-width: 0; padding: 16px 24px 24px; overflow-y: auto; }
-  #panelBody .p-side { width: 300px; flex: none; border-left: 1px solid #ece9e4;
-    background: #fbfaf8; padding: 16px 18px 24px; overflow-y: auto; }
-  #panelBody .p-main > :first-child, #panelBody .p-side > :first-child { margin-top: 0; }
+  #panelBody { display: block; height: 100%; overflow-y: auto; padding: 16px 18px 28px; }
+  #panelBody > :first-child { margin-top: 0; }
   #panel h2 { font-size: 17px; line-height: 1.45; color: #1c1917; margin-bottom: 8px; }
   #panel .meta-row { display: flex; flex-wrap: wrap; gap: 18px;
     font-size: 12.5px; color: #a8a29e; margin-bottom: 4px; }
@@ -79,7 +74,7 @@
     margin: 16px 0 8px; }
   #panel p.abs { font-size: 13px; line-height: 1.85; color: #44403c; }
   #panel .formula { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px;
-    color: #1c1917; background: #fff; border: 1px solid #e7e2da; border-radius: 6px;
+    color: #1c1917; background: #fbfaf8; border: 1px solid #e7e2da; border-radius: 6px;
     padding: 10px 12px; line-height: 1.6; word-break: break-all; }
   #panel ul { padding-left: 20px; font-size: 13px; line-height: 1.9; color: #44403c; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -94,13 +89,13 @@
 </head>
 <body>
 
-<div id="topbar">
+<aside id="sidebar">
   <h1>🗺 大语言模型学习地图</h1>
-  <span class="sub">Transformer-based LLM · 里程碑论文 · 阅读路径</span>
-  <div class="spacer"></div>
+  <div class="sub">Transformer-based LLM<br>里程碑论文 · 阅读路径</div>
   <input id="search" type="text" placeholder="搜索论文...">
   <button id="fitBtn">↕ 适应视图</button>
-</div>
+  <div id="legend"><h3>图例筛选</h3></div>
+</aside>
 
 <div id="stage">
   <svg id="canvas">
@@ -122,7 +117,6 @@
   </svg>
 </div>
 
-<div id="legend"><h3>图例筛选</h3></div>
 <div id="hint">🖱 滚轮缩放 · 拖拽平移 · 点击论文查看详情 · 悬停高亮依赖关系</div>
 
 <div id="panel"><button class="close" id="closeBtn">✕</button><div id="panelBody"></div></div>
@@ -306,9 +300,9 @@ window.addEventListener("resize", fitView);
 function panToPaper(p) {
   const rect = stage.getBoundingClientRect();
   if (view.k < 0.7) view.k = 0.9;
-  const drawerH = panel.classList.contains("open") ? panel.getBoundingClientRect().height : 0;
-  view.x = rect.width / 2 - p.x * view.k;
-  view.y = (rect.height - drawerH) / 2 - (p.y + NODE_H / 2) * view.k;
+  const cardW = panel.classList.contains("open") ? panel.getBoundingClientRect().width + 32 : 0;
+  view.x = (rect.width - cardW) / 2 - p.x * view.k;
+  view.y = rect.height / 2 - (p.y + NODE_H / 2) * view.k;
   applyView();
 }
 
@@ -325,28 +319,24 @@ function selectPaper(id, pan = true) {
   const chip = (pid, label) =>
     `<span class="chip" data-id="${pid}">${esc(label || byId[pid].title)}</span>`;
   panelBody.innerHTML = `
-    <div class="p-main">
-      <div class="badges">
-        <span class="badge" style="color:${cat.color};border-color:${cat.color};background:${cat.color}14">${cat.name}</span>
-        <span class="badge" style="color:${lv.color};border-color:${lv.color};background:${lv.color}14">${lv.label}</span>
-      </div>
-      <h2>${esc(p.fullTitle)}</h2>
-      <div class="meta-row">
-        <span>👥 ${esc(p.authors)}</span>
-        <span>📅 ${p.year}</span>
-        <span>🏛 ${esc(p.venue)}</span>
-      </div>
-      <h4>摘要</h4><p class="abs">${esc(p.abstract)}</p>
-      <h4>主要贡献</h4><ul>${p.contributions.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
-      ${p.prerequisites?.length ? `<h4>阅读前置要求</h4><ul>${
-        p.prerequisites.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+    <div class="badges">
+      <span class="badge" style="color:${cat.color};border-color:${cat.color};background:${cat.color}14">${cat.name}</span>
+      <span class="badge" style="color:${lv.color};border-color:${lv.color};background:${lv.color}14">${lv.label}</span>
     </div>
-    <div class="p-side">
-      ${p.keyFormula ? `<h4>核心公式 / 关键思想</h4><div class="formula">${esc(p.keyFormula)}</div>` : ""}
-      ${p.deps.length ? `<h4>依赖论文</h4><div class="chips">${p.deps.map(d => chip(d)).join("")}</div>` : ""}
-      ${p.dependents.length ? `<h4>后续延伸</h4><div class="chips">${p.dependents.map(d => chip(d)).join("")}</div>` : ""}
-      <a class="arxiv" href="${p.arxiv}" target="_blank" rel="noopener">📄 arXiv / 原文</a>
-    </div>`;
+    <h2>${esc(p.fullTitle)}</h2>
+    <div class="meta-row">
+      <span>👥 ${esc(p.authors)}</span>
+      <span>📅 ${p.year}</span>
+      <span>🏛 ${esc(p.venue)}</span>
+    </div>
+    <h4>摘要</h4><p class="abs">${esc(p.abstract)}</p>
+    ${p.keyFormula ? `<h4>核心公式 / 关键思想</h4><div class="formula">${esc(p.keyFormula)}</div>` : ""}
+    <h4>主要贡献</h4><ul>${p.contributions.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+    ${p.prerequisites?.length ? `<h4>阅读前置要求</h4><ul>${
+      p.prerequisites.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+    ${p.deps.length ? `<h4>依赖论文</h4><div class="chips">${p.deps.map(d => chip(d)).join("")}</div>` : ""}
+    ${p.dependents.length ? `<h4>后续延伸</h4><div class="chips">${p.dependents.map(d => chip(d)).join("")}</div>` : ""}
+    <a class="arxiv" href="${p.arxiv}" target="_blank" rel="noopener">📄 arXiv / 原文</a>`;
   panelBody.querySelectorAll(".chip[data-id]").forEach(c =>
     c.addEventListener("click", () => selectPaper(c.dataset.id)));
   panel.classList.add("open");

@@ -76,17 +76,20 @@ await page.click("#panelBody .chip[data-id='transformer']");
 check("面板内跳转到 Transformer",
   (await page.textContent("#panelBody h2"))?.includes("Attention Is All You Need"));
 
-// 7) 底部抽屉形态 + 选中态 + Esc 关闭
+// 7) 左侧栏结构 + 右侧浮卡形态 + 选中态 + Esc 关闭
+check("侧栏包含搜索框与图例",
+  await page.locator("#sidebar #search").count() === 1 &&
+  await page.locator("#sidebar #legend").count() === 1);
 await page.locator("#nodes .node", { hasText: "Word2Vec" }).first().click();
-check("抽屉打开", await panelOpen());
+check("详情浮卡打开", await panelOpen());
 const pbox = await page.$eval("#panel", el => {
   const r = el.getBoundingClientRect();
-  return { x: Math.round(r.x), w: Math.round(r.width), bottom: Math.round(r.bottom) };
+  return { top: Math.round(r.top), right: Math.round(r.right), w: Math.round(r.width) };
 });
-check("抽屉全宽贴底", pbox.x === 0 && pbox.w === 1600 && pbox.bottom === 1000, JSON.stringify(pbox));
+check("浮卡贴右侧悬浮", pbox.top === 16 && pbox.right === 1584 && pbox.w === 360, JSON.stringify(pbox));
 check("选中节点带 selected 标记", await page.locator("#nodes .node.selected").count() === 1);
 await page.keyboard.press("Escape");
-check("Esc 关闭抽屉", !(await panelOpen()));
+check("Esc 关闭浮卡", !(await panelOpen()));
 check("关闭后无 selected 节点", await page.locator("#nodes .node.selected").count() === 0);
 
 // 截图前重开一个抽屉（等过渡动画结束，避免拍到中间帧）

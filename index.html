@@ -6,29 +6,30 @@
 <title>大语言模型学习地图</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; overflow: hidden; background: #0d1117; color: #c9d1d9;
+  html, body { height: 100%; overflow: hidden; background: #fbfaf8; color: #1c1917;
     font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif; }
 
   /* ===== 顶栏 ===== */
-  #topbar { position: fixed; top: 0; left: 0; right: 0; height: 52px; z-index: 20;
+  #topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; z-index: 20;
     display: flex; align-items: center; gap: 14px; padding: 0 16px;
-    background: rgba(13,17,23,.92); border-bottom: 1px solid #21262d; backdrop-filter: blur(6px); }
-  #topbar h1 { font-size: 16px; font-weight: 700; white-space: nowrap; }
-  #topbar .sub { font-size: 11px; color: #8b949e; white-space: nowrap; }
+    background: rgba(255,255,255,.92); border-bottom: 1px solid #ece9e4; backdrop-filter: blur(6px); }
+  #topbar h1 { font-size: 14px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+  #topbar .sub { font-size: 11px; color: #a8a29e; white-space: nowrap; }
   #topbar .spacer { flex: 1; }
-  #search { width: 220px; padding: 6px 10px; font-size: 12px; color: #c9d1d9;
-    background: #161b22; border: 1px solid #30363d; border-radius: 6px; outline: none; }
-  #search:focus { border-color: #58a6ff; }
-  #fitBtn { padding: 6px 12px; font-size: 12px; color: #c9d1d9; cursor: pointer;
-    background: #161b22; border: 1px solid #30363d; border-radius: 6px; }
-  #fitBtn:hover { border-color: #58a6ff; }
+  #search { width: 220px; padding: 6px 14px; font-size: 12px; color: #1c1917;
+    background: #f5f3ef; border: 1px solid #ece9e4; border-radius: 99px; outline: none; }
+  #search:focus { border-color: #dc2626; background: #fff; }
+  #fitBtn { padding: 6px 14px; font-size: 12px; color: #57534e; cursor: pointer;
+    background: #fff; border: 1px solid #e7e2da; border-radius: 99px; }
+  #fitBtn:hover { border-color: #dc2626; color: #dc2626; }
 
   /* ===== 画布 ===== */
-  #stage { position: fixed; inset: 52px 0 0 0; cursor: grab; }
+  #stage { position: fixed; inset: 44px 0 0 0; cursor: grab;
+    background: radial-gradient(circle, #e7e2da 1px, transparent 1px); background-size: 22px 22px; }
   #stage.dragging { cursor: grabbing; }
   svg { width: 100%; height: 100%; display: block; }
-  .era-label { fill: #8b949e; font-size: 13px; font-weight: 700; text-anchor: middle; }
-  .era-line { stroke: #21262d; stroke-width: 1; stroke-dasharray: 3 5; }
+  .era-label { fill: #a8a29e; font-size: 12px; font-weight: 600; letter-spacing: .15em; text-anchor: middle; }
+  .era-line { stroke: #e7e2da; stroke-width: 1; stroke-dasharray: 3 5; }
   .edge { fill: none; stroke: #3d444d; stroke-width: 1.4; }
   .edge.hi { stroke: #58a6ff; stroke-width: 2.4; }
   .edge.dim, .node.dim { opacity: .12; }
@@ -42,13 +43,15 @@
   /* ===== 图例 ===== */
   #legend { position: fixed; left: 12px; bottom: 12px; z-index: 15; width: 168px;
     max-height: 46vh; overflow: auto; padding: 10px 12px; font-size: 11px;
-    background: rgba(22,27,34,.92); border: 1px solid #30363d; border-radius: 8px; }
-  #legend h3 { font-size: 11px; color: #8b949e; margin-bottom: 6px; }
-  #legend .item { display: flex; align-items: center; gap: 7px; padding: 2.5px 4px;
-    border-radius: 4px; cursor: pointer; }
-  #legend .item:hover { background: #21262d; }
+    background: rgba(255,255,255,.94); border: 1px solid #e7e2da; border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(28,25,23,.08); backdrop-filter: blur(4px); }
+  #legend h3 { font-size: 11px; color: #a8a29e; letter-spacing: .08em; margin-bottom: 6px; }
+  #legend .item { display: flex; align-items: center; gap: 7px; padding: 2.5px 6px;
+    border-radius: 5px; cursor: pointer; color: #57534e; }
+  #legend .item:hover { background: #f5f3ef; }
+  #legend .item.on { background: #fef2f2; color: #dc2626; font-weight: 600; }
   #legend .dot { width: 9px; height: 9px; border-radius: 3px; flex: none; }
-  #hint { position: fixed; right: 12px; bottom: 12px; z-index: 15; font-size: 11px; color: #6e7681; }
+  #hint { position: fixed; right: 12px; bottom: 12px; z-index: 15; font-size: 11px; color: #a8a29e; }
 
   /* ===== 详情面板 ===== */
   #panel { position: fixed; top: 52px; right: 0; bottom: 0; width: 360px; z-index: 18;
@@ -113,7 +116,7 @@
   </svg>
 </div>
 
-<div id="legend"><h3>图例</h3></div>
+<div id="legend"><h3>图例筛选</h3></div>
 <div id="hint">🖱 滚轮缩放 · 拖拽平移 · 点击论文查看详情 · 悬停高亮依赖关系</div>
 
 <div id="panel"><button class="close" id="closeBtn">✕</button><div id="panelBody"></div></div>
